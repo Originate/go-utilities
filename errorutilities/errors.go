@@ -10,8 +10,13 @@ import (
 )
 
 var (
-	ErrInvalidUUID = NewInvalidUUIDError()
-	ErrNotFound    = NewNotFoundError("resource")
+	ErrInvalidUUID     = NewInvalidUUIDError()
+	ErrNotFound        = NewNotFoundError("resource")
+	ErrFieldUnexported = NewError("field is unexported, can't get it's value")
+	ErrDataNotStruct   = NewError("data isn't struct")
+	ErrFieldNotInt     = NewError("field isn't type int, int8, int16, int32 or int64")
+	ErrFieldNotUInt    = NewError("field isn't type uint, uint8, uint16, uint32 or uint64")
+	ErrFieldNotString  = NewError("field isn't type string")
 )
 
 type Error struct {
@@ -67,5 +72,11 @@ func NewValidationError(errors validator.ValidationErrors) Error {
 	return Error{
 		Message: fmt.Sprintf("The following fields don't meet the validation requirements:\n%s", message),
 		Status:  http.StatusBadRequest,
+	}
+}
+
+func NewUnexportedFieldError(fieldName string) Error {
+	return Error{
+		Message: fmt.Sprintf("field is unexported, can't get it's value: %s", fieldName),
 	}
 }
