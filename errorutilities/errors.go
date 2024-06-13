@@ -40,6 +40,12 @@ func NewError(message string, status ...int) Error {
 	}
 }
 
+func NewErrorf(pattern string, args ...any) Error {
+	return Error{
+		Message: fmt.Sprintf(pattern, args...),
+	}
+}
+
 func NewBadRequestError(message string) Error {
 	return Error{
 		Message: fmt.Sprintf("BadRequest: request doesn't fullfill the requirements: %s", message),
