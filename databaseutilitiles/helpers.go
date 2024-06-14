@@ -13,12 +13,22 @@ import (
 	"github.com/Originate/go-utilities/configutilities"
 	"github.com/Originate/go-utilities/errorutilities"
 	"github.com/Originate/go-utilities/utils"
+	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 )
 
 var invalidStringRegex = regexp.MustCompile("<([a-zA-Z0-9]) value>")
 var updateQueryTemplate = "UPDATE %s SET %s WHERE id = $%d RETURNING *"
+
+func scan(rows pgx.Rows, dest interface{}) error {
+	switch reflect.ValueOf(dest).Elem().Kind() {
+	case reflect.Slice:
+		return checkNoRowsInResultSetError(pgxscan.ScanAll(dest, rows))
+	default:
+		return checkNoRowsInResultSetError(pgxscan.ScanOne(dest, rows))
+	}
+}
 
 func checkNoRowsInResultSetError(err error) error {
 	if errors.Is(err, pgx.ErrNoRows) || errors.Is(err, sql.ErrNoRows) {
