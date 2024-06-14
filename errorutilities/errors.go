@@ -17,6 +17,7 @@ var (
 	ErrFieldNotInt     = NewError("field isn't type int, int8, int16, int32 or int64")
 	ErrFieldNotUInt    = NewError("field isn't type uint, uint8, uint16, uint32 or uint64")
 	ErrFieldNotString  = NewError("field isn't type string")
+	ErrNotPointer      = NewError("destination should be pointer or else changes won't reflect on it")
 )
 
 type Error struct {
