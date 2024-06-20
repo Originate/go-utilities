@@ -1,4 +1,4 @@
-package databaseutilitiles
+package databaseutilities
 
 import (
 	"context"
